@@ -58,8 +58,27 @@ td.lp { background: #fef7e0; color: #b06000; }
 .footnote { color: #80868b; font-size: 11px; margin-top: 24px; line-height: 1.7; }
 </style></head><body>
 
-<h1>CRM iTV Dashboard</h1>
-<div class="meta">2026-03-01 to 2026-04-30 &nbsp;|&nbsp; USD (1 SGD = 0.74) &nbsp;|&nbsp; Apr 30, 2026 17:34</div>
+<h1>CRM iTV Dashboard — Full Month</h1>
+<div class="meta">2026-03-01 to 2026-04-30 &nbsp;|&nbsp; USD (1 SGD = 0.74) &nbsp;|&nbsp; Apr 30, 2026 17:44</div>
+
+<details class="meth-block" style="margin:14px 0 22px 0; padding:12px 16px; background:#f4f7fa; border-left:3px solid #1a73e8; border-radius:4px;">
+  <summary style="cursor:pointer; font-weight:600; color:#1a73e8;">📐 Methodology — how iTV is calculated (Full Month view)</summary>
+  <div style="margin-top:10px; font-size:13px; color:#3c4043; line-height:1.6;">
+    <p><b>iTV formula (all journeys):</b> <code>iTV = (Test_avg_TV_per_user − Control_avg_TV_per_user) × Test_user_count</code></p>
+    <p><b>This dashboard — Full Calendar Month:</b></p><ul><li><b>Cohort:</b> all users currently in the segment as of dashboard render time. No daily entry tracking — single bulk cohort per segment.</li><li><b>Window:</b> entire calendar month. For MP, gated to start at PROVISION_CAMPAIGN_START (Apr 9) since campaign hadn't launched before that.</li><li><b>Aggregation:</b> Test_total_TV / Test_user_count − Control_total_TV / Control_user_count → multiplied by Test_user_count.</li><li><b>Use case:</b> total realized TV difference between Test and Control across the whole month. Broader read — captures downstream effects.</li></ul>
+    <p><b>Filters by journey:</b></p>
+    <ul>
+      <li><b>GEO, LB:</b> <code>TXN_TYPE = 'Fin'</code> (settled card spend, single-counted; excludes Auth/AuthRev paired-twins, P2P, Remittance, Bank Withdrawals, system ops).</li>
+      <li><b>MP OneSignal, MP Full (BQ):</b> wallet-only filter — <code>DIGITAL_WALLET IS NOT NULL AND msg_type IN ('AUTHADV','FINADV') AND txn_category IN ('POS','eCommerce') AND tlog_id NOT IN VIEW_REVERSE_TXN</code>. Matches data team's #503 dashboard exactly.</li>
+    </ul>
+    <p><b>MP cohorts (two views):</b></p>
+    <ul>
+      <li><b>MP OneSignal:</b> push-reachable subset — 217K iOS Test + 24K Control + 333K Android Test + 37K Control. From OneSignal segments.</li>
+      <li><b>MP Full (BQ):</b> full data-team cohort — 755,624 Target + 84,075 Control. From <code>bigquery-369506.SG_YOUTRIP_PUBLIC.TEMP_MOBILE_SPEND_20260406</code>. Reproduces data team's $264,468 SGD iTV within $34 SGD rounding.</li>
+    </ul>
+    <p style="margin-top:10px; color:#80868b; font-size:12px;">* = estimated value (e.g., March GEO derived from April daily rate × 31 days, no actual March cohort data).</p>
+  </div>
+</details>
 
 <div class="grand-row">
   <div class="grand-card main">
